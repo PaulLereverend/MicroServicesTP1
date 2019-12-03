@@ -18,40 +18,48 @@ import com.paullereverend.exceptions.UtilisateurNotFoundException;
 import com.paullereverend.repositories.UtilisateurRepository;
 import com.paullereverend.services.UtilisateurService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
+@Api(value="Gestion des utilisateurs", description="Ressources permettant de gérer des utilisateurs (CRUD)")
 public class UtilisateurController {
 	
 	@Autowired
 	UtilisateurService service;
 	
-
+	@ApiOperation(value = "Récupère un utilisateur", response = Utilisateur.class)
+	
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-	public Utilisateur getUtilisateurById(@PathVariable int id) {
+	public Utilisateur getUtilisateurById(@ApiParam(value = "Identifiant d'un utilisateur (ex 1,2,3...)", required = true) @PathVariable int id) {
 		return service.getUtilisateurById(id);
 	}
-		
+	@ApiOperation(value = "Récupère la liste des utilisateurs", response = List.class)
 	@RequestMapping(value = "/get", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Utilisateur> getAllUtilisateurs() {
 		return service.getAllUtilisateurs();
 	}
-	
+	@ApiOperation(value = "Créé un utilisateur", response = Utilisateur.class)
 	@RequestMapping(value = "/create", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-	public Utilisateur createUtilisateur(Utilisateur user) {
+	public Utilisateur createUtilisateur(@ApiParam(value = "Utilisateur à créer", required = true) Utilisateur user) {
 		return service.createUtilisateur(user);
 	}
 	
+	@ApiOperation(value = "Supprime un utilisateur", response = Utilisateur.class)
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-	public Utilisateur deleteUtilisateurById(@PathVariable int id) {
+	public Utilisateur deleteUtilisateurById(@ApiParam(value = "Identifiant d'un utilisateur (ex 1,2,3...)", required = true) @PathVariable int id) {
 		return service.deleteUtilisateurById(id);
 	}
 	
+	@ApiOperation(value = "Met à jour un utilisateur", response = Utilisateur.class)
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
-	public Utilisateur updateUtilisateur(@PathVariable int id, Utilisateur user) {
+	public Utilisateur updateUtilisateur(@ApiParam(value = "Identifiant d'un utilisateur (ex 1,2,3...)", required = true) @PathVariable int id, @ApiParam(value = "Utilisateur modifié", required = true) Utilisateur user) {
 		return service.updateUtilisateur(id, user);
 	}
 	
