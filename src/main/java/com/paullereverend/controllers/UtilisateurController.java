@@ -59,5 +59,27 @@ public class UtilisateurController {
 		return utilisateur.get();
 	}
 	
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+	public Utilisateur updateUtilisateur(@PathVariable int id, Utilisateur user) {
+		Optional<Utilisateur> utilisateur=utilisateurRepo.findById(id);
+		if(!utilisateur.isPresent()) {
+			throw new UtilisateurNotFoundException();
+		}
+		Utilisateur util = utilisateur.get();
+		
+		utilisateurRepo.save(recopie(util, user));
+		return util;
+	}
+	private Utilisateur recopie (Utilisateur user1, Utilisateur user2) {
+		if (user2.getNom() != null){
+			user1.setNom(user2.getNom());
+		}
+		if (user2.getPrenom() != null){
+			user1.setPrenom(user2.getPrenom());
+		}
+		return user1;
+	}
+	
 	
 }
