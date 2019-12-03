@@ -1,5 +1,6 @@
 package com.paullereverend.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.json.JSONObject;
@@ -25,36 +26,37 @@ public class UtilisateurController {
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-	public String getUtilisateurById(@PathVariable int id) {
+	public Utilisateur getUtilisateurById(@PathVariable int id) {
 		Optional<Utilisateur> utilisateur=utilisateurRepo.findById(id);
 		if(!utilisateur.isPresent()) {
 			throw new UtilisateurNotFoundException();
 		}
-		JSONObject jsonObject = new JSONObject(utilisateur.get());
+		return utilisateur.get();
+	}
 		
-		return jsonObject.toString();
+	@RequestMapping(value = "/get", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Utilisateur> getAllUtilisateurs() {
+		return utilisateurRepo.findAll();
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-	public String createUtilisateur(Utilisateur user) {
+	public Utilisateur createUtilisateur(Utilisateur user) {
 		System.out.println(user.getNom());
 		utilisateurRepo.save(user);
-		JSONObject jsonObject = new JSONObject(user);
-		return jsonObject.toString();
+		return user;
 	}
 	
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-	public String deleteUtilisateurById(@PathVariable int id) {
+	public Utilisateur deleteUtilisateurById(@PathVariable int id) {
 		Optional<Utilisateur> utilisateur=utilisateurRepo.findById(id);
 		if(!utilisateur.isPresent()) {
 			throw new UtilisateurNotFoundException();
 		}
 		utilisateurRepo.deleteById(id);
-		JSONObject jsonObject = new JSONObject(utilisateur.get());
-		
-		return jsonObject.toString();
+		return utilisateur.get();
 	}
 	
 	
