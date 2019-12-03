@@ -16,70 +16,45 @@ import org.springframework.web.bind.annotation.RestController;
 import com.paullereverend.entities.Utilisateur;
 import com.paullereverend.exceptions.UtilisateurNotFoundException;
 import com.paullereverend.repositories.UtilisateurRepository;
+import com.paullereverend.services.UtilisateurService;
 
 @RestController
 public class UtilisateurController {
 	
 	@Autowired
-	private UtilisateurRepository utilisateurRepo;
+	UtilisateurService service;
 	
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
 	public Utilisateur getUtilisateurById(@PathVariable int id) {
-		Optional<Utilisateur> utilisateur=utilisateurRepo.findById(id);
-		if(!utilisateur.isPresent()) {
-			throw new UtilisateurNotFoundException();
-		}
-		return utilisateur.get();
+		return service.getUtilisateurById(id);
 	}
 		
 	@RequestMapping(value = "/get", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Utilisateur> getAllUtilisateurs() {
-		return utilisateurRepo.findAll();
+		return service.getAllUtilisateurs();
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
 	public Utilisateur createUtilisateur(Utilisateur user) {
-		System.out.println(user.getNom());
-		utilisateurRepo.save(user);
-		return user;
+		return service.createUtilisateur(user);
 	}
 	
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
 	public Utilisateur deleteUtilisateurById(@PathVariable int id) {
-		Optional<Utilisateur> utilisateur=utilisateurRepo.findById(id);
-		if(!utilisateur.isPresent()) {
-			throw new UtilisateurNotFoundException();
-		}
-		utilisateurRepo.deleteById(id);
-		return utilisateur.get();
+		return service.deleteUtilisateurById(id);
 	}
 	
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
 	public Utilisateur updateUtilisateur(@PathVariable int id, Utilisateur user) {
-		Optional<Utilisateur> utilisateur=utilisateurRepo.findById(id);
-		if(!utilisateur.isPresent()) {
-			throw new UtilisateurNotFoundException();
-		}
-		Utilisateur util = utilisateur.get();
-		
-		utilisateurRepo.save(recopie(util, user));
-		return util;
+		return service.updateUtilisateur(id, user);
 	}
-	private Utilisateur recopie (Utilisateur user1, Utilisateur user2) {
-		if (user2.getNom() != null){
-			user1.setNom(user2.getNom());
-		}
-		if (user2.getPrenom() != null){
-			user1.setPrenom(user2.getPrenom());
-		}
-		return user1;
-	}
+	
 	
 	
 }
